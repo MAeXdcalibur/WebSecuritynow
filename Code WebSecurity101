@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Coding Awareness</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1em;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 2em 0;
+        }
+        section {
+            margin-bottom: 2em;
+            padding: 1em;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 0.5em;
+        }
+        form {
+            margin-top: 1em;
+        }
+        input[type="text"], input[type="submit"] {
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            width: 100%;
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .example-output {
+            padding: 1em;
+            background: #e7f7e7;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Secure Coding Awareness</h1>
+    </header>
+
+    <div class="container">
+        <section id="sql-injection">
+            <h2>SQL Injection Example</h2>
+            <form id="sql-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <input type="submit" value="Submit">
+            </form>
+            <div id="sql-output" class="example-output"></div>
+        </section>
+
+        <section id="xss">
+            <h2>Cross-Site Scripting (XSS) Example</h2>
+            <form id="xss-form">
+                <label for="comment">Leave a Comment:</label>
+                <textarea id="comment" name="comment" rows="4" required></textarea>
+                <input type="submit" value="Post Comment">
+            </form>
+            <div id="xss-output" class="example-output"></div>
+        </section>
+
+        <section id="csrf">
+            <h2>Cross-Site Request Forgery (CSRF) Example</h2>
+            <form id="csrf-form">
+                <label for="csrf-action">Perform Action:</label>
+                <input type="submit" value="Submit Action">
+            </form>
+            <div id="csrf-output" class="example-output"></div>
+        </section>
+    </div>
+
+    <script>
+        // SQL Injection Example
+        document.getElementById('sql-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            // Simulate SQL Injection vulnerability
+            const simulatedDatabaseResponse = `Welcome, ${username}!`; // This could be exploited
+            document.getElementById('sql-output').textContent = simulatedDatabaseResponse;
+        });
+
+        // Cross-Site Scripting (XSS) Example
+        document.getElementById('xss-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const comment = document.getElementById('comment').value;
+            // Simulate XSS vulnerability
+            document.getElementById('xss-output').innerHTML = `Comment: ${comment}`; // Potentially dangerous
+        });
+
+        // Cross-Site Request Forgery (CSRF) Example
+        document.getElementById('csrf-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Simulate CSRF attack
+            document.getElementById('csrf-output').textContent = 'Action performed successfully!';
+        });
+    </script>
+</body>
+</html>
