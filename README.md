@@ -3,123 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Secure Coding Awareness</title>
+    <title>Security Demo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
         }
-        h1, h2 {
-            color: #2d6187;
-        }
-        section {
-            margin-bottom: 40px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .container {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
         }
         input, button {
-            padding: 10px;
+            padding: 8px;
             margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            width: calc(100% - 18px);
         }
-        button {
-            background-color: #2d6187;
-            color: white;
+        #result {
+            margin-top: 10px;
         }
-        .highlight {
-            background-color: #f9d342;
-            padding: 5px;
-        }
-        .secure {
-            color: green;
-        }
-        .vulnerable {
-            color: red;
+        .color-box {
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
+    <h1>Security Demo</h1>
 
-    <h1>Welcome to Secure Coding Awareness</h1>
-    <p>This website demonstrates common security vulnerabilities and how to avoid them with secure coding practices.</p>
+    <!-- Password Strength Checker -->
+    <div class="container">
+        <h2>Password Strength Checker</h2>
+        <input type="text" id="password" placeholder="Enter password">
+        <button onclick="checkPassword()">Check Password</button>
+        <div id="result"></div>
+    </div>
 
-    <section id="sql-injection">
-        <h2>SQL Injection Example</h2>
-        <p>Simulate a login system vulnerable to SQL injection:</p>
-        <form onsubmit="simulateSQLInjection(event)">
-            <label for="username">Username: </label>
-            <input type="text" id="username" required><br>
-            <label for="password">Password: </label>
-            <input type="password" id="password" required><br>
-            <button type="submit">Login</button>
-        </form>
-        <p id="sql-result"></p>
-        <p><strong>Tip:</strong> Always sanitize and validate user input on both client and server sides.</p>
-    </section>
+    <!-- Password Generator -->
+    <div class="container">
+        <h2>Password Generator</h2>
+        <input type="number" id="length" placeholder="Password length" min="8">
+        <button onclick="generatePasswords()">Generate Passwords</button>
+        <div id="passwords"></div>
+    </div>
 
-    <section id="xss">
-        <h2>Cross-Site Scripting (XSS) Example</h2>
-        <p>Enter a comment below to see how XSS can exploit a poorly secured website:</p>
-        <form onsubmit="simulateXSS(event)">
-            <label for="comment">Comment: </label>
-            <input type="text" id="comment" required><br>
-            <button type="submit">Post Comment</button>
-        </form>
-        <div id="comments"></div>
-        <p><strong>Tip:</strong> Always encode and escape user input before displaying it on the page.</p>
-    </section>
+    <!-- URL Challenge -->
+    <div class="container">
+        <h2>URL Challenge</h2>
+        <a href="#" id="challengeUrl">http://example.com/?access_token=hidden</a>
+        <button onclick="showChallenge()">Reveal Data</button>
+        <div id="challengeResult"></div>
+    </div>
 
-    <section id="csrf">
-        <h2>Cross-Site Request Forgery (CSRF) Example</h2>
-        <p>This is a basic form vulnerable to CSRF attacks. In a real-world scenario, another site could submit this form on your behalf:</p>
-        <form action="submit" method="post">
-            <label for="csrf-action">Perform Action: </label>
-            <input type="text" id="csrf-action"><br>
-            <button type="submit">Submit</button>
-        </form>
-        <p><strong>Tip:</strong> Use anti-CSRF tokens in forms to prevent unauthorized form submissions.</p>
-    </section>
-
-    <section id="secure-practices">
-        <h2>Secure Coding Practices</h2>
-        <p>Secure coding practices can prevent these vulnerabilities. Here are a few key tips:</p>
-        <ul>
-            <li><span class="highlight">Input Validation:</span> Always validate and sanitize user input.</li>
-            <li><span class="highlight">Authentication:</span> Use secure password hashing techniques like bcrypt.</li>
-            <li><span class="highlight">HTTPS:</span> Always use HTTPS to secure data transmitted between users and servers.</li>
-        </ul>
-    </section>
+    <!-- Webcam Color Identifier -->
+    <div class="container">
+        <h2>Webcam Color Identifier</h2>
+        <button onclick="startWebcam()">Start Webcam</button>
+        <video id="webcam" width="320" height="240" autoplay></video>
+        <div id="colorResult"></div>
+    </div>
 
     <script>
-        // Simulate SQL Injection
-        function simulateSQLInjection(event) {
-            event.preventDefault();
-            let username = document.getElementById("username").value;
-            let password = document.getElementById("password").value;
-            
-            // Simulate an SQL query
-            let query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
-            
-            // Display the vulnerable query result
-            document.getElementById("sql-result").innerHTML = `<p class="vulnerable">Vulnerable Query: ${query}</p>`;
+        // Password Strength Checker
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            const result = document.getElementById('result');
+
+            if (password.length < 8) {
+                result.textContent = 'Weak Password';
+            } else if (/^[a-zA-Z0-9!@#$%^&*()_+]{8,}$/.test(password)) {
+                result.textContent = 'Strong Password';
+            } else {
+                result.textContent = 'Moderate Password';
+            }
         }
 
-        // Simulate XSS (Cross-Site Scripting)
-        function simulateXSS(event) {
-            event.preventDefault();
-            let comment = document.getElementById("comment").value;
-            
-            // Vulnerable output (no encoding)
-            let commentSection = document.getElementById("comments");
-            commentSection.innerHTML += `<p class="vulnerable">Vulnerable Comment: ${comment}</p>`;
+        // Password Generator
+        function generatePasswords() {
+            const length = parseInt(document.getElementById('length').value) || 12;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+            let passwords = [];
+
+            for (let i = 0; i < 10; i++) {
+                let password = "";
+                for (let j = 0; j < length; j++) {
+                    password += charset.charAt(Math.floor(Math.random() * charset.length));
+                }
+                passwords.push(password);
+            }
+
+            document.getElementById('passwords').innerHTML = passwords.join('<br>');
+        }
+
+        // URL Challenge
+        function showChallenge() {
+            document.getElementById('challengeResult').textContent = 'The hidden data is: "SecretData123"';
+        }
+
+        // Webcam Color Identifier
+        function startWebcam() {
+            const video = document.getElementById('webcam');
+            const colorResult = document.getElementById('colorResult');
+            const colors = ['red', 'green', 'blue', 'yellow', 'black', 'white', 'orange', 'purple', 'brown'];
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        identifyColor();
+                    };
+                })
+                .catch(error => console.error('Error accessing webcam:', error));
+
+            function identifyColor() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imgData.data;
+                let colorCounts = colors.reduce((acc, color) => { acc[color] = 0; return acc; }, {});
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
+                    const color = getColor(r, g, b);
+                    if (color) colorCounts[color]++;
+                }
+
+                let resultHtml = '';
+                colors.forEach(color => {
+                    const percentage = ((colorCounts[color] / (data.length / 4)) * 100).toFixed(2);
+                    resultHtml += `<div class="color-box" style="background-color: ${color};"></div> ${color}: ${percentage}%<br>`;
+                });
+
+                colorResult.innerHTML = resultHtml;
+
+                setTimeout(identifyColor, 2000); // Update every 2 seconds
+            }
+
+            function getColor(r, g, b) {
+                if (r > 150 && g < 100 && b < 100) return 'red';
+                if (r < 100 && g > 150 && b < 100) return 'green';
+                if (r < 100 && g < 100 && b > 150) return 'blue';
+                if (r > 150 && g > 150 && b < 100) return 'yellow';
+                if (r < 100 && g < 100 && b < 100) return 'black';
+                if (r > 200 && g > 200 && b > 200) return 'white';
+                if (r > 200 && g < 100 && b < 100) return 'orange';
+                if (r > 150 && g < 100 && b > 150) return 'purple';
+                if (r > 100 && g < 100 && b < 100) return 'brown';
+                return null;
+            }
         }
     </script>
-
 </body>
 </html>
